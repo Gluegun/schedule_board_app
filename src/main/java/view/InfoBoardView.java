@@ -6,8 +6,9 @@ import dto.StationDto;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
-import javax.ejb.Startup;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -20,14 +21,19 @@ import java.util.List;
 
 @Named
 @ApplicationScoped
-@Startup
 public class InfoBoardView {
 
     private final static ObjectMapper objectMapper = new ObjectMapper();
+    private JMSConsumer jmsConsumer;
 
-    public InfoBoardView() {
-        JMSConsumer consumer = new JMSConsumer();
-        consumer.consume();
+    @Inject
+    public InfoBoardView(JMSConsumer jmsConsumer) {
+        this.jmsConsumer = jmsConsumer;
+    }
+
+    @PostConstruct
+    public void init() {
+        jmsConsumer.consume();
     }
 
     public List<StationDto> getStations() throws IOException {
@@ -38,9 +44,9 @@ public class InfoBoardView {
         });
     }
 
-    public List<ScheduleDto> getSchedules() throws IOException {
+    public List<ScheduleDto> getSchedules(int stationId) {
         Client client = ClientBuilder.newClient();
-        Response response = client.target("http://localhost:8180/rest/schedule/1")
+        Response response = client.target("http://localhost:8180/rest/schedule/" + stationId)
                 .request().get();
 
         return Arrays.asList(response.readEntity(ScheduleDto[].class));

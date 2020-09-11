@@ -2,22 +2,24 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core" lang="en">
 
     <h:head>
         <title>Board</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-              integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+              integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
               crossorigin="anonymous"/>
+
         <h:outputScript>
             function onMessage(message) {
                 Location.reload();
             }
         </h:outputScript>
+
     </h:head>
 
     <h:body>
-
 
         <h:panelGroup layout="header" styleClass="navbar navbar-expand-lg navbar-light bg-light">
             <h:link value="Home" outcome="index"/>
@@ -25,32 +27,31 @@
 
         <h:dataTable value="#{infoBoardView.stations}" var="station" styleClass="table">
             <h:column>
-                <f:facet name="header">Id</f:facet>
-                ${station.id}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Station name</f:facet>
+                <f:facet name="t">Station</f:facet>
                 ${station.name}
+                <f:facet name="t">Schedule</f:facet>
+
+                <h:column>
+                    <h:dataTable value="#{infoBoardView.getSchedules(station.id)}" var="schedule" styleClass="table">
+
+                        <h:column>
+                            <f:facet name="train">Train number</f:facet>
+                            ${schedule.train.trainNumber}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="DT">Arr time</f:facet>
+                            ${schedule.arrivalTime}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="DT">Dep time</f:facet>
+                            ${schedule.departureTime}
+                        </h:column>
+                    </h:dataTable>
+                </h:column>
             </h:column>
         </h:dataTable>
-
-
-        <h:dataTable value="#{infoBoardView.schedules}" var="schedule" styleClass="table">
-            <h:column>
-                <f:facet name="header">Train number</f:facet>
-                ${schedule.train.trainNumber}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Arrival time</f:facet>
-                ${schedule.arrivalTime}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Departure time</f:facet>
-                ${schedule.departureTime}
-            </h:column>
-
-        </h:dataTable>
-
-
+        <f:websocket channel="websocket" onmessage="onMessage"/>
     </h:body>
 </html>

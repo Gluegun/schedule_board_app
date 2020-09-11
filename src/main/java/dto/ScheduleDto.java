@@ -1,8 +1,7 @@
 package dto;
 
-import lombok.*;
-
-import java.time.LocalTime;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

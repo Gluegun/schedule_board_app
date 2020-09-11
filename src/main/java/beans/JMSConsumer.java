@@ -2,22 +2,29 @@ package beans;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.jms.*;
 
+@ApplicationScoped
+@Named
 public class JMSConsumer {
 
-    public void consume() {
+    private String URL = "tcp://localhost:61616";
 
-        ConnectionFactory factory = new ActiveMQConnectionFactory(ActiveMQConnectionFactory.DEFAULT_BROKER_BIND_URL);
+    @Inject
+    private TopicSubscriber topicSubscriber;
+
+    public void consume() {
+        ConnectionFactory factory = new ActiveMQConnectionFactory(URL);
         try {
             Connection connection = factory.createConnection();
-            Session session = connection.createSession(false,
-                    Session.AUTO_ACKNOWLEDGE);
+            connection.start();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Topic topic = session.createTopic("railways");
             MessageConsumer consumer = session.createConsumer(topic);
-            TopicSubscriber listener = new TopicSubscriber();
-            consumer.setMessageListener(listener);
-            connection.start();
+            consumer.setMessageListener(topicSubscriber);
         } catch (JMSException exp) {
             exp.printStackTrace();
         }

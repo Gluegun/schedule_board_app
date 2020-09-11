@@ -1,21 +1,20 @@
 package beans;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import java.io.Serializable;
 
 @Named
-@ApplicationScoped
-public class TopicSubscriber implements MessageListener {
+public class TopicSubscriber implements MessageListener, Serializable {
 
     @Inject
-    private WebsocketPushBean pushBean;
+    public WebsocketPushBean pushBean;
 
     @Override
     public void onMessage(Message message) {
-        System.out.println("Received message from railways");
-        pushBean.pushUpdate();
+        System.out.println("listen");
+        pushBean.sendMessage();
     }
 }
