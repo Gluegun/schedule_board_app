@@ -14,7 +14,6 @@ public class TopicSubscriber implements MessageListener, Serializable {
 
     @Override
     public void onMessage(Message message) {
-        System.out.println("listen");
         pushBean.sendMessage();
     }
 }

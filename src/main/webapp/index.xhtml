@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core" lang="en">
 
     <h:head>
@@ -12,8 +11,9 @@
               crossorigin="anonymous"/>
 
         <h:outputScript>
-            function onMessage(message) {
-                Location.reload();
+            function onMessage(String) {
+                window.location.reload();
+                console.log(String);
             }
         </h:outputScript>
 
