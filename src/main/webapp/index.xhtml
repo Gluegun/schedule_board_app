@@ -10,13 +10,6 @@
               integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
               crossorigin="anonymous"/>
 
-        <h:outputScript>
-            function onMessage(String) {
-                window.location.reload();
-                console.log(String);
-            }
-        </h:outputScript>
-
     </h:head>
 
     <h:body>
@@ -25,33 +18,14 @@
             <h:link value="Home" outcome="index"/>
         </h:panelGroup>
 
+
         <h:dataTable value="#{infoBoardView.stations}" var="station" styleClass="table">
+
             <h:column>
-                <f:facet name="t">Station</f:facet>
-                ${station.name}
-                <f:facet name="t">Schedule</f:facet>
-
-                <h:column>
-                    <h:dataTable value="#{infoBoardView.getSchedules(station.id)}" var="schedule" styleClass="table">
-
-                        <h:column>
-                            <f:facet name="train">Train number</f:facet>
-                            ${schedule.train.trainNumber}
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="DT">Arr time</f:facet>
-                            ${schedule.arrivalTime}
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="DT">Dep time</f:facet>
-                            ${schedule.departureTime}
-                        </h:column>
-                    </h:dataTable>
-                </h:column>
+                <h:link value="Schedule for ${station.name} station" outcome="station">
+                    <f:param name="id" value="${station.id}"/>
+                </h:link>
             </h:column>
         </h:dataTable>
-        <f:websocket channel="websocket" onmessage="onMessage"/>
     </h:body>
 </html>
